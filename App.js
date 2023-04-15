@@ -1,7 +1,15 @@
 import { useState } from "react";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
-import { Alert, FlatList, SafeAreaView, StyleSheet, View } from "react-native";
+import {
+  Alert,
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  View,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import AddTask from "./components/AddTask";
 import Header from "./components/Header";
 import Task from "./components/Task";
@@ -16,8 +24,11 @@ export default function App() {
     { id: 6, task: "JavaScript II", done: false },
   ]);
 
+  /**
+   * Add Task
+   * @params - text
+   */
   const addTask = (text) => {
-    console.log("Text", text);
     if (!text) {
       Alert.alert("No tasks ??", "Please add a task", [
         {
@@ -29,19 +40,33 @@ export default function App() {
     }
   };
 
+  /**
+   * Delete Task
+   * @params - id
+   */
+  const deleteTask = (id) => {
+    setTasks((prevTasks) => {
+      return prevTasks.filter((task) => task.id != id);
+    });
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
-      <Header />
-      <View style={styles.content}>
-        <AddTask addTask={addTask} />
-        <View style={styles.list}>
-          <FlatList
-            data={tasks}
-            renderItem={({ item }) => <Task item={item} />}
-          />
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <SafeAreaView style={styles.container}>
+        <Header />
+        <View style={styles.content}>
+          <AddTask addTask={addTask} />
+          <View style={styles.list}>
+            <FlatList
+              data={tasks}
+              renderItem={({ item }) => (
+                <Task item={item} deleteTask={deleteTask} />
+              )}
+            />
+          </View>
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -52,8 +77,10 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 30,
+    flex: 1,
   },
   list: {
     marginTop: 30,
+    flex: 1,
   },
 });
