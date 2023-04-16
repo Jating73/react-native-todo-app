@@ -2,9 +2,12 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
-function Task({ item, deleteTask }) {
+function Task({ item, deleteTask, navigation }) {
   return (
-    <TouchableOpacity style={styles.item}>
+    <TouchableOpacity
+      style={styles.item}
+      onPress={() => navigation.navigate("Task", item)}
+    >
       <Text>{item.task}</Text>
       <AntDesign
         name="delete"
